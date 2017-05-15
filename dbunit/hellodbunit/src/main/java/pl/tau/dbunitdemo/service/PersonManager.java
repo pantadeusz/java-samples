@@ -10,7 +10,6 @@ import pl.tau.dbunitdemo.domain.Person;
 
 public interface PersonManager {
 	public Connection getConnection();
-	public void clearPersons() throws SQLException;
 	public int addPerson(Person person);
 	public List<Person> getAllPersons();
 }

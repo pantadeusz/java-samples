@@ -1,45 +1,33 @@
 package pl.tau.dbunitdemo.service;
-// przyklad na podstawie przykladow J. Neumanna
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.List;
-
-import org.dbunit.*;
-import org.dbunit.database.AbstractDatabaseConnection;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.Assertion;
+import org.dbunit.DBTestCase;
+import org.dbunit.PropertiesBasedJdbcDatabaseTester;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import pl.tau.dbunitdemo.domain.Person;
+
+import java.net.URL;
+import java.sql.SQLException;
 
 @RunWith(JUnit4.class)
 public class PersonManagerTest extends DBTestCase {
 	PersonManager personManager;
 
     public PersonManagerTest() throws SQLException {
-        super("My Test");
+        super("PersonManagerImpl test");
         System.setProperty( PropertiesBasedJdbcDatabaseTester.DBUNIT_DRIVER_CLASS, "org.hsqldb.jdbcDriver" );
         System.setProperty( PropertiesBasedJdbcDatabaseTester.DBUNIT_CONNECTION_URL, "jdbc:hsqldb:hsql://localhost/workdb" );
         System.setProperty( PropertiesBasedJdbcDatabaseTester.DBUNIT_USERNAME, "sa" );
         System.setProperty( PropertiesBasedJdbcDatabaseTester.DBUNIT_PASSWORD, "" );
-        personManager = new PersonManagerImpl();
     }
 
     /**
@@ -72,21 +60,19 @@ public class PersonManagerTest extends DBTestCase {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        personManager = new PersonManagerImpl(this.getConnection().getConnection());
     }
 	
 	@Test
 	public void checkAdding() throws Exception {
-
-        System.out.println("adding check");
-		String NAME_1 = "Janek";
-		int YOB_1 = 1939;
-
 		Person person = new Person();
-		person.setName(NAME_1);
-		person.setYob(YOB_1);
-        assertEquals(1, personManager.addPerson(person));
+		person.setName("Janek");
+		person.setYob(1939);
 
-        // Weryfikacja danych
+		assertEquals(1, personManager.addPerson(person));
+
+        // Data verification
+
         IDataSet dbDataSet = this.getConnection().createDataSet();
         ITable actualTable = dbDataSet.getTable("PERSON");
         ITable filteredTable = DefaultColumnFilter.excludedColumnsTable
