@@ -2,12 +2,14 @@ package pl.tau.dbunitdemo.service;
 
 import org.dbunit.Assertion;
 import org.dbunit.DBTestCase;
+import org.dbunit.IDatabaseTester;
 import org.dbunit.PropertiesBasedJdbcDatabaseTester;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,12 +24,16 @@ import java.sql.SQLException;
 public class PersonManagerTest extends DBTestCase {
 	PersonManager personManager;
 
-    public PersonManagerTest() throws SQLException {
+    public PersonManagerTest() throws Exception {
         super("PersonManagerImpl test");
-        System.setProperty( PropertiesBasedJdbcDatabaseTester.DBUNIT_DRIVER_CLASS, "org.hsqldb.jdbcDriver" );
-        System.setProperty( PropertiesBasedJdbcDatabaseTester.DBUNIT_CONNECTION_URL, "jdbc:hsqldb:hsql://localhost/workdb" );
-        System.setProperty( PropertiesBasedJdbcDatabaseTester.DBUNIT_USERNAME, "sa" );
-        System.setProperty( PropertiesBasedJdbcDatabaseTester.DBUNIT_PASSWORD, "" );
+    }
+
+    protected DatabaseOperation getSetUpOperation() throws Exception {
+        return DatabaseOperation.INSERT;
+    }
+
+    protected DatabaseOperation getTearDownOperation() throws Exception {
+        return DatabaseOperation.TRUNCATE_TABLE;
     }
 
     /**
@@ -37,7 +43,7 @@ public class PersonManagerTest extends DBTestCase {
      */
     @Override
     protected IDataSet getDataSet() throws Exception {
-        return this.getDataSet("dataset-pm.xml");
+        return this.getDataSet("dataset-pm-add.xml");
     }
 
     /**
@@ -77,7 +83,7 @@ public class PersonManagerTest extends DBTestCase {
         ITable actualTable = dbDataSet.getTable("PERSON");
         ITable filteredTable = DefaultColumnFilter.excludedColumnsTable
                 (actualTable, new String[]{"ID"});
-        IDataSet expectedDataSet = getDataSet("dataset-pm-add.xml");
+        IDataSet expectedDataSet = getDataSet("dataset-pm-add-check.xml");
         ITable expectedTable = expectedDataSet.getTable("PERSON");
 
         Assertion.assertEquals(expectedTable, filteredTable);
