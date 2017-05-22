@@ -51,4 +51,5 @@ public class Car {
 	public void setSold(Boolean sold) {
 		this.sold = sold;
 	}
+
 }

@@ -1,6 +1,7 @@
 package com.example.shdemo.service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -30,8 +31,13 @@ public class SellingMangerHibernateImpl implements SellingManager {
 	public void addClient(Person person) {
 		person.setId(null);
 		sessionFactory.getCurrentSession().persist(person);
+		sessionFactory.getCurrentSession().flush();
 	}
-	
+    @Override
+    public void updateClient(Person person) {
+        sessionFactory.getCurrentSession().update(person);
+    }
+
 	@Override
 	public void deleteClient(Person person) {
 		person = (Person) sessionFactory.getCurrentSession().get(Person.class,
@@ -42,6 +48,9 @@ public class SellingMangerHibernateImpl implements SellingManager {
 			car.setSold(false);
 			sessionFactory.getCurrentSession().update(car);
 		}
+		//person.getCars().clear();
+        //sessionFactory.getCurrentSession().update(person);
+
 		sessionFactory.getCurrentSession().delete(person);
 	}
 
@@ -80,6 +89,9 @@ public class SellingMangerHibernateImpl implements SellingManager {
 		Car car = (Car) sessionFactory.getCurrentSession()
 				.get(Car.class, carId);
 		car.setSold(true);
+		if (person.getCars() == null) {
+			person.setCars(new LinkedList<Car>());
+		}
 		person.getCars().add(car);
 	}
 

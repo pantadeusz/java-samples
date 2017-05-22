@@ -10,6 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -27,12 +28,13 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/beans.xml" })
 @Rollback
+//@Commit
 @Transactional(transactionManager = "txManager")
-@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
+@TestExecutionListeners({
+    DependencyInjectionTestExecutionListener.class,
     DirtiesContextTestExecutionListener.class,
     TransactionalTestExecutionListener.class,
     DbUnitTestExecutionListener.class })
@@ -47,15 +49,15 @@ public class SellingManagerDBUnitTest {
 	@ExpectedDatabase(value = "/addPersonData.xml", 
 	assertionMode = DatabaseAssertionMode.NON_STRICT)
 	public void getClientCheck() {
-        assertEquals(2, sellingManager.getAllClients().size());
+	    assertEquals(2, sellingManager.getAllClients().size());
         
         Person p = new Person();
         p.setFirstName("Kaziu");
         p.setPin("8754");
         p.setRegistrationDate(new Date());
-        
-        sellingManager.addClient(p);
-	}
 
-	
+        sellingManager.addClient(p);
+        assertEquals(3, sellingManager.getAllClients().size());
+
+    }
 }

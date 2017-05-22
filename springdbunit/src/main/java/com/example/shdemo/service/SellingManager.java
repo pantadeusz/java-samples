@@ -20,4 +20,5 @@ public interface SellingManager {
 	List<Car> getOwnedCars(Person person);
 	void sellCar(Long personId, Long carId);
 
+    void updateClient(Person client);
 }

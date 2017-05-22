@@ -4,18 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 @Entity
 @NamedQueries({ 
@@ -26,11 +15,11 @@ public class Person {
 
 	private Long id;
 
-	private String firstName = "unknown";
-	private String pin = "";
-	private Date registrationDate = new Date();
+	private String firstName;// = "unknown";
+	private String pin;// = "";
+	private Date registrationDate;// = new Date();
 
-	private List<Car> cars = new ArrayList<Car>();
+	private List<Car> cars;// = new ArrayList<Car>();
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -64,8 +53,9 @@ public class Person {
 		this.registrationDate = registrationDate;
 	}
 
-	// Be careful here, both with lazy and eager fetch type
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //@OneToMany(orphanRemoval=true)
+    //@JoinColumn(name="OWNER")
 	public List<Car> getCars() {
 		return cars;
 	}
