@@ -8,9 +8,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Commit;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.shdemo.domain.Car;
@@ -18,8 +19,9 @@ import com.example.shdemo.domain.Person;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/beans.xml" })
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
-@Transactional
+@Rollback
+//@Commit
+@Transactional(transactionManager = "txManager")
 public class SellingManagerTest {
 
 	@Autowired
@@ -41,13 +43,14 @@ public class SellingManagerTest {
 	public void addClientCheck() {
 
 		List<Person> retrievedClients = sellingManager.getAllClients();
-
 		// If there is a client with PIN_1 delete it
 		for (Person client : retrievedClients) {
+			System.out.println("Klient: " + client.getFirstName() + " " + client.getPin());
 			if (client.getPin().equals(PIN_1)) {
 				sellingManager.deleteClient(client);
 			}
 		}
+		retrievedClients = sellingManager.getAllClients();
 
 		Person person = new Person();
 		person.setFirstName(NAME_1);
@@ -62,6 +65,7 @@ public class SellingManagerTest {
 		assertEquals(NAME_1, retrievedClient.getFirstName());
 		assertEquals(PIN_1, retrievedClient.getPin());
 		// ... check other properties here
+
 	}
 
 	@Test
@@ -87,7 +91,6 @@ public class SellingManagerTest {
 		Person person = new Person();
 		person.setFirstName(NAME_2);
 		person.setPin(PIN_2);
-
 		sellingManager.addClient(person);
 
 		Person retrievedPerson = sellingManager.findClientByPin(PIN_2);

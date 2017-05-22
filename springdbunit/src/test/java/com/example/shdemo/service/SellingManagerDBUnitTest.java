@@ -27,11 +27,6 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 
-class TableTimeFilter extends DefaultColumnFilter{
-	public TableTimeFilter() {
-		this.excludeColumn("*TIME");
-	}
-}
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/beans.xml" })
