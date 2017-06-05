@@ -1,0 +1,28 @@
+language: java
+
+sudo: false
+
+cache:
+ directories:
+   - $HOME/.m2
+
+before_install:
+  - export MAVEN_OPTS="-Xmx512M $MAVEN_OPTS"
+
+before_script:
+  - unset GEM_PATH GEM_HOME IRBRC JRUBY_OPTS
+  - export PATH="`pwd`/bin:$PATH"
+  - echo $HOME
+  - echo $JAVA_OPTS
+  - echo $MAVEN_OPTS
+
+jdk:
+  - openjdk7
+#  - oraclejdk8
+
+os:
+  - linux
+
+install: tool/travis-install.sh
+script: tool/travis-script.sh
+
