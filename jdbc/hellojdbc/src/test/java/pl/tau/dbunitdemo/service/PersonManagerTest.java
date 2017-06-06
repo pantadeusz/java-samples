@@ -26,7 +26,7 @@ public class PersonManagerTest {
         person.setName("Janek");
         person.setYob(1939);
 
-        assertEquals(2, personManager.addPerson(person));
+        assertEquals(1, personManager.addPerson(person));
     }
 
 }
