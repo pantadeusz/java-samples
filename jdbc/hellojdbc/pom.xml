@@ -8,7 +8,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>5.3.19</spring.version>
-		<com.fasterxml.jackson.version>2.12.6.1</com.fasterxml.jackson.version>
+		<com.fasterxml.jackson.version>2.13.4.1</com.fasterxml.jackson.version>
 	</properties>
 	<dependencies>
 		<dependency>
